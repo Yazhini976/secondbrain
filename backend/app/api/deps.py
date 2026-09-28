@@ -86,9 +86,6 @@ def get_current_user(
     # ── Dev Mode Bypass ────────────────────────────────────────────────────────
     dev_payload = _resolve_dev_token(token)
     if dev_payload is not None:
-        yazhini = db.query(User).filter(User.email == "yazhininedumaran06@gmail.com").first()
-        if yazhini:
-            return yazhini
         payload = dev_payload
     else:
         # ── Firebase Verification ──────────────────────────────────────────────
