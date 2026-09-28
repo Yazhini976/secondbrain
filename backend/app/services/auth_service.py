@@ -77,15 +77,16 @@ def signup_user(db: Session, req: SignUpRequest) -> Tuple[User, str]:
         password_hash=hash_password(req.password),
         display_name=req.name.strip(),
         monthly_income=req.monthly_income or Decimal("75000.00"),
-        monthly_capacity=Decimal("25000.00"),
+        monthly_capacity=(req.monthly_income or Decimal("75000.00")) * Decimal("0.35"),
         is_active=True,
     )
     db.add(user)
     db.commit()
     db.refresh(user)
 
-    # Seed baseline dummy data for the newly registered user so all charts work immediately
-    seed_user_dummy_data(db, user.id, force=False)
+    # Only seed baseline dummy data for the designated demo user yazhininedumaran06@gmail.com
+    if clean_email == "yazhininedumaran06@gmail.com":
+        seed_user_dummy_data(db, user.id, force=False)
 
     token = generate_auth_token(user)
     return user, token

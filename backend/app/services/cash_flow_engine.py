@@ -9,9 +9,9 @@ from app.models.investment import Investment
 from app.models.financial_goal import FinancialGoal
 from app.schemas.financial_intelligence import CashFlowSummary
 
-DEFAULT_MONTHLY_INCOME = Decimal("250000.00")
-DEFAULT_MONTHLY_EXPENSES = Decimal("25000.00")
-DEFAULT_EXISTING_COMMITMENTS = Decimal("10000.00")
+DEFAULT_MONTHLY_INCOME = Decimal("75000.00")
+DEFAULT_MONTHLY_EXPENSES = Decimal("0.00")
+DEFAULT_EXISTING_COMMITMENTS = Decimal("0.00")
 
 
 def calculate_user_cash_flow(
@@ -29,19 +29,19 @@ def calculate_user_cash_flow(
     """
     monthly_income = custom_income or getattr(current_user, "monthly_income", None) or DEFAULT_MONTHLY_INCOME
 
-    # Calculate actual monthly expenses from DB if expenses exist, otherwise fallback
+    # Calculate actual monthly expenses from DB (defaults to 0.00 if user has logged none)
     expense_stmt = select(func.coalesce(func.sum(Expense.amount), 0)).where(
         Expense.user_id == current_user.id
     )
     db_expenses_sum = Decimal(str(db.scalar(expense_stmt) or 0))
-    monthly_expenses = db_expenses_sum if db_expenses_sum > Decimal("0.00") else DEFAULT_MONTHLY_EXPENSES
+    monthly_expenses = db_expenses_sum
 
-    # Calculate actual monthly investment commitments from DB if investments exist, otherwise fallback
+    # Calculate actual monthly investment commitments from DB (defaults to 0.00 if user has logged none)
     inv_stmt = select(func.coalesce(func.sum(Investment.monthly_contribution), 0)).where(
         Investment.user_id == current_user.id
     )
     db_inv_sum = Decimal(str(db.scalar(inv_stmt) or 0))
-    existing_commitments = db_inv_sum if db_inv_sum > Decimal("0.00") else DEFAULT_EXISTING_COMMITMENTS
+    existing_commitments = db_inv_sum
 
     # Available monthly financial capacity (prefer user-configured DB capacity)
     user_cap = getattr(current_user, "monthly_capacity", None)

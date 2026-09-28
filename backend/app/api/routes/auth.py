@@ -55,7 +55,7 @@ def get_current_user_profile(
     Protected Endpoint: Returns profile details of the currently authenticated PostgreSQL user.
     Includes display_name, email, phone, monthly_income, and monthly_capacity.
     """
-    if not settings.TESTING:
+    if not settings.TESTING and current_user.email == "yazhininedumaran06@gmail.com":
         seed_user_dummy_data(db, current_user.id, force=False)
     return current_user
 
