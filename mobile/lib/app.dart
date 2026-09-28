@@ -65,6 +65,13 @@ class _AuthGateState extends State<AuthGate> {
 
   void _reloadAllUserData() {
     final now = DateTime.now();
+    // Clear in-memory caches before loading the active user's data
+    ExpenseRepository.instance.clear();
+    InvestmentRepository.instance.clear();
+    DocumentRepository.instance.clear();
+    ReminderRepository.instance.clear();
+    FinancialRepository.instance.clear();
+
     UserProfileRepository.instance.loadProfile();
     ExpenseRepository.instance.loadExpensesForMonth(now.year, now.month);
     InvestmentRepository.instance.loadInvestments();
@@ -91,7 +98,15 @@ class _AuthGateState extends State<AuthGate> {
           return const AppShell();
         }
 
-        _lastAuthenticatedUserId = null;
+        if (_lastAuthenticatedUserId != null) {
+          _lastAuthenticatedUserId = null;
+          ExpenseRepository.instance.clear();
+          InvestmentRepository.instance.clear();
+          DocumentRepository.instance.clear();
+          ReminderRepository.instance.clear();
+          FinancialRepository.instance.clear();
+        }
+
         if (_showSignUp) {
           return SignUpScreen(
             onSwitchToLogin: () => setState(() => _showSignUp = false),

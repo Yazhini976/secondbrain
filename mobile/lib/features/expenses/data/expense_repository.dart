@@ -29,6 +29,13 @@ class ExpenseRepository extends ChangeNotifier {
 
   List<Expense> getExpenses() => List.unmodifiable(_expenses);
 
+  /// Clears in-memory expenses when switching users or logging out.
+  void clear() {
+    _expenses = [];
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   /// Returns an expense by ID, or null if not found.
   Expense? getById(String id) {
     try {

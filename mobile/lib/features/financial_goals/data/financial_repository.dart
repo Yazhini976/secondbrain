@@ -30,6 +30,14 @@ class FinancialRepository extends ChangeNotifier {
 
   List<FinancialGoal> getGoals() => List.unmodifiable(_goals);
 
+  /// Clears in-memory goals and analysis when switching users or logging out.
+  void clear() {
+    _goals = [];
+    _analysis = null;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   /// Loads goals and full financial analysis from backend API.
   Future<void> loadAnalysis() async {
     _isLoading = true;

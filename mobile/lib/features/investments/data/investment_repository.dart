@@ -30,6 +30,13 @@ class InvestmentRepository extends ChangeNotifier {
 
   List<Investment> getInvestments() => List.unmodifiable(_investments);
 
+  /// Clears in-memory investments when switching users or logging out.
+  void clear() {
+    _investments = [];
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   /// Loads investments from backend with optional category type filter.
   Future<List<Investment>> loadInvestments({String? type}) async {
     _isLoading = true;

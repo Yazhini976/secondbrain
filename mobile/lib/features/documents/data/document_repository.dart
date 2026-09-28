@@ -29,6 +29,13 @@ class DocumentRepository extends ChangeNotifier {
 
   List<Document> getDocuments() => List.unmodifiable(_documents);
 
+  /// Clears in-memory documents when switching users or logging out.
+  void clear() {
+    _documents = [];
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   /// Loads documents from backend with optional category filter.
   Future<List<Document>> loadDocuments({String? category, String? search}) async {
     _isLoading = true;

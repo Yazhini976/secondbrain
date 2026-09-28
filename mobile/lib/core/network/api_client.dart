@@ -28,9 +28,9 @@ class ApiClient {
       token = await ApiConfig.authTokenProvider!();
     }
 
-    // Default fallback for development testing against backend
-    token ??= 'test-token-flutter-device-user';
-    headers['Authorization'] = 'Bearer $token';
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
 
     return headers;
   }

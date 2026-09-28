@@ -28,6 +28,13 @@ class ReminderRepository extends ChangeNotifier {
   List<Reminder> getAll() => List.unmodifiable(_reminders);
   List<Reminder> getReminders() => getAll();
 
+  /// Clears in-memory reminders when switching users or logging out.
+  void clear() {
+    _reminders = [];
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   /// Loads reminders from backend API with optional category filter.
   Future<List<Reminder>> loadReminders({String? category}) async {
     _isLoading = true;
